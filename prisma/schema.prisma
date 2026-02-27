@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Formation {
+  id            String   @id @default(uuid())
+  title         String
+  category      String
+  badge         String?
+  pitch         String
+  duration      String
+  level         String
+  type          String
+  language      String
+  certification String
+  price         String
+  image         String
+  slug          String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ContactRequest {
+  id        String   @id @default(uuid())
+  subject   String
+  name      String
+  email     String
+  phone     String?
+  message   String
+  sourceUrl String?
+  status    String   @default("NEW") // NEW, READ, REPLIED
+  createdAt DateTime @default(now())
+}
+
+model Apprenant {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  firstName String
+  lastName  String
+  lmsId     String?  @unique
+  status    String   @default("ACTIVE") // ACTIVE, INACTIVE
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
