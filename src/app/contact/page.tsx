@@ -1,6 +1,7 @@
 "use client";
 
 import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { Mail, Phone, Clock, MessageSquare, Calendar, Globe, CheckCircle2 } from "lucide-react";
 import { useState, FormEvent, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
@@ -265,6 +266,7 @@ export default function ContactPage() {
 
                 </div>
             </div>
+            <Footer />
         </main>
     );
 }

@@ -1,6 +1,14 @@
 import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { CheckCircle2, ArrowRight, User, TrendingUp, Briefcase } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Parcours & Accompagnement | OTOP Formation",
+    description: "Découvrez notre méthodologie sur-mesure : audit de positionnement, plan de formation personnalisé, coaching individuel et insertion professionnelle garantie.",
+};
 
 export default function ParcoursPage() {
     return (
@@ -19,9 +27,9 @@ export default function ParcoursPage() {
                                 <span className="text-indigo-600">sur-mesure.</span>
                             </h1>
                             <p className="text-lg text-slate-500 mb-10 leading-relaxed">
-                                Chez OTOP Formation, nous ne vendons pas qu'un simple cours en ligne.
+                                Chez OTOP Formation, nous ne vendons pas qu&apos;un simple cours en ligne.
                                 Nous construisons ensemble votre feuille de route vers le succès :
-                                100% encadré par des experts, avec des cas concrets et des objectifs d'embauche mesurables.
+                                100% encadré par des experts, avec des cas concrets et des objectifs d&apos;embauche mesurables.
                             </p>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
@@ -46,11 +54,15 @@ export default function ParcoursPage() {
 
                         <div className="flex-1 relative">
                             <div className="relative z-10 rounded-[40px] overflow-hidden shadow-2xl shadow-indigo-500/10 rotate-1 border border-slate-100 dark:border-slate-800 bg-white p-2">
-                                <img
-                                    src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800"
-                                    alt="Session de coaching personnalisé OTOP"
-                                    className="w-full h-full object-cover rounded-[32px]"
-                                />
+                                <div className="relative w-full aspect-[4/3] rounded-[32px] overflow-hidden">
+                                    <Image
+                                        src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800"
+                                        alt="Session de coaching personnalisé OTOP"
+                                        fill
+                                        className="object-cover"
+                                        sizes="(max-width: 1024px) 100vw, 50vw"
+                                    />
+                                </div>
                             </div>
                             <div className="absolute -top-10 -right-10 w-80 h-80 bg-indigo-500/20 rounded-full blur-[80px]" />
                             <div className="absolute -bottom-10 -left-10 w-80 h-80 bg-purple-500/20 rounded-full blur-[80px]" />
@@ -64,11 +76,10 @@ export default function ParcoursPage() {
                 <div className="container mx-auto px-6">
                     <div className="text-center mb-20">
                         <h2 className="text-3xl md:text-5xl font-bold mb-6">Votre réussite en 4 étapes</h2>
-                        <p className="text-slate-500 max-w-2xl mx-auto text-lg">Un processus éprouvé auprès de plus de 2000 apprenants, pensé pour maximiser votre taux d'employabilité.</p>
+                        <p className="text-slate-500 max-w-2xl mx-auto text-lg">Un processus éprouvé auprès de plus de 2000 apprenants, pensé pour maximiser votre taux d&apos;employabilité.</p>
                     </div>
 
                     <div className="relative">
-                        {/* Ligne de connexion cachée sur mobile, visible sur lg */}
                         <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-slate-200 dark:bg-slate-800 -translate-y-1/2 z-0"></div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 relative z-10">
@@ -98,7 +109,15 @@ export default function ParcoursPage() {
                         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white opacity-5 rounded-full -mr-64 -mt-64 blur-3xl pointer-events-none" />
 
                         <div className="lg:w-1/3 mb-10 lg:mb-0 relative z-10">
-                            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=600" alt="Exemple de parcours réussi" className="rounded-3xl shadow-2xl rotate-[-3deg] border-4 border-white/10" />
+                            <div className="relative w-full aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl rotate-[-3deg] border-4 border-white/10">
+                                <Image
+                                    src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=600"
+                                    alt="Exemple de parcours réussi"
+                                    fill
+                                    className="object-cover"
+                                    sizes="(max-width: 1024px) 100vw, 33vw"
+                                />
+                            </div>
                         </div>
 
                         <div className="lg:w-2/3 text-white relative z-10">
@@ -140,7 +159,7 @@ export default function ParcoursPage() {
                     <h2 className="text-4xl font-extrabold mb-6 text-slate-900 dark:text-white">Vous êtes le prochain ?</h2>
                     <p className="text-slate-500 mb-10 text-lg">
                         Plus de 80% de nos apprenants trouvent un emploi ou lancent leur projet dans les 6 mois après leur certification.
-                        Rejoignez une communauté internationale (15+ pays représentés) et bénéficiez d'un accompagnement d'élite.
+                        Rejoignez une communauté internationale (15+ pays représentés) et bénéficiez d&apos;un accompagnement d&apos;élite.
                     </p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
                         <Link href="/contact" className="px-8 py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-indigo-500/20">
@@ -150,6 +169,7 @@ export default function ParcoursPage() {
                 </div>
             </section>
 
+            <Footer />
         </main>
     );
 }

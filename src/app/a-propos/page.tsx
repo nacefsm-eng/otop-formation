@@ -1,6 +1,14 @@
 import { Navbar } from "@/components/Navbar";
-import { Target, Users, ShieldCheck, Award, MapPin, Code, MessageCircle } from "lucide-react";
+import { Footer } from "@/components/Footer";
+import { Target, Users, ShieldCheck, Award, Code, MessageCircle } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "À propos | OTOP Formation – L'école de demain",
+    description: "Découvrez OTOP Formation : notre vision, nos valeurs, notre équipe pédagogique et nos certifications internationales (Qualiopi, RNCP).",
+};
 
 export default function AboutPage() {
     return (
@@ -16,12 +24,12 @@ export default function AboutPage() {
                             Qui sommes-nous ?
                         </div>
                         <h1 className="text-4xl md:text-6xl font-extrabold mb-8 tracking-tight">
-                            L'école OTOP : <br />
-                            <span className="text-indigo-600">Rejoignez l'Élite.</span>
+                            L&apos;école OTOP : <br />
+                            <span className="text-indigo-600">Rejoignez l&apos;Élite.</span>
                         </h1>
                         <p className="text-xl text-slate-500 leading-relaxed mb-12">
-                            OTOP Formation est né en France d'une conviction simple : la formation à distance doit être engageante, internationale et mener à des résultats mesurables.
-                            Nous rassemblons les meilleurs experts mondiaux pour accompagner entreprises et particuliers face aux défis de l'économie numérique.
+                            OTOP Formation est né en France d&apos;une conviction simple : la formation à distance doit être engageante, internationale et mener à des résultats mesurables.
+                            Nous rassemblons les meilleurs experts mondiaux pour accompagner entreprises et particuliers face aux défis de l&apos;économie numérique.
                         </p>
                     </div>
                 </div>
@@ -77,63 +85,55 @@ export default function AboutPage() {
             <section className="py-24 bg-slate-50 dark:bg-slate-900/10">
                 <div className="container mx-auto px-6">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-6">L'Équipe Pédagogique</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold mb-6">L&apos;Équipe Pédagogique</h2>
                         <p className="text-slate-500 max-w-2xl mx-auto">Plus de 50 experts formateurs basés aux 4 coins du globe (France, Canada, Suisse, Maroc) pour vous transmettre le meilleur de chaque filière.</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="group text-center">
-                            <div className="aspect-square rounded-3xl overflow-hidden mb-6 relative">
-                                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80" alt="Directeur Pédagogique OTOP" className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" />
-                                <div className="absolute inset-0 bg-indigo-900/20" />
+                        {[
+                            { name: "Thomas R.", role: "Directeur Académique", image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80" },
+                            { name: "Camille S.", role: "Responsable Digital & Tech", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=500&q=80" },
+                            { name: "Karim M.", role: "Coach Carrière & Insertion", image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=500&q=80" },
+                        ].map((member, i) => (
+                            <div key={i} className="group text-center">
+                                <div className="aspect-square rounded-3xl overflow-hidden mb-6 relative">
+                                    <Image src={member.image} alt={member.name + " - " + member.role} fill className="object-cover group-hover:scale-110 transition-transform duration-700" sizes="(max-width: 768px) 100vw, 33vw" />
+                                    <div className="absolute inset-0 bg-indigo-900/20" />
+                                </div>
+                                <h3 className="text-xl font-bold mb-1">{member.name}</h3>
+                                <p className="text-indigo-600 font-medium text-sm mb-3">{member.role}</p>
                             </div>
-                            <h3 className="text-xl font-bold mb-1">Thomas R.</h3>
-                            <p className="text-indigo-600 font-medium text-sm mb-3">Directeur Académique</p>
-                        </div>
-                        <div className="group text-center">
-                            <div className="aspect-square rounded-3xl overflow-hidden mb-6 relative">
-                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=500&q=80" alt="Lead Formateur Web OTOP" className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" />
-                            </div>
-                            <h3 className="text-xl font-bold mb-1">Camille S.</h3>
-                            <p className="text-indigo-600 font-medium text-sm mb-3">Responsable Digital & Tech</p>
-                        </div>
-                        <div className="group text-center">
-                            <div className="aspect-square rounded-3xl overflow-hidden mb-6 relative">
-                                <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=500&q=80" alt="Coach carrière OTOP" className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" />
-                            </div>
-                            <h3 className="text-xl font-bold mb-1">Karim M.</h3>
-                            <p className="text-indigo-600 font-medium text-sm mb-3">Coach Carrière & Insertion</p>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </section>
 
-            {/* Partenaires et Labels Contextualisés */}
+            {/* Partenaires et Labels */}
             <section className="py-24 bg-slate-900 text-white mx-4 md:mx-6 rounded-[40px] mb-24 overflow-hidden relative shadow-2xl">
                 <div className="absolute inset-0 bg-indigo-500/10 pointer-events-none blur-[100px]" />
                 <div className="container mx-auto px-6 relative z-10">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">Certifications & Standards Internationaux</h2>
-                        <p className="text-slate-400 max-w-2xl mx-auto">Notre qualité d'enseignement est validée par des organismes d'État et des leaders technologiques.</p>
+                        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">Certifications &amp; Standards Internationaux</h2>
+                        <p className="text-slate-400 max-w-2xl mx-auto">Notre qualité d&apos;enseignement est validée par des organismes d&apos;État et des leaders technologiques.</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
                         <div className="border border-slate-700 p-8 rounded-3xl bg-slate-800/50">
                             <div className="text-2xl font-bold mb-4 text-indigo-400">Qualiopi (France)</div>
                             <p className="text-sm text-slate-400 leading-relaxed">
-                                Certification d'État attestant de l'excellence de nos processus pédagogiques, garantissant l'accès à de nombreux financements européens.
+                                Certification d&apos;État attestant de l&apos;excellence de nos processus pédagogiques, garantissant l&apos;accès à de nombreux financements européens.
                             </p>
                         </div>
                         <div className="border border-slate-700 p-8 rounded-3xl bg-slate-800/50">
                             <div className="text-2xl font-bold mb-4 text-emerald-400">Titres RNCP</div>
                             <p className="text-sm text-slate-400 leading-relaxed">
-                                Nos formations principales délivrent des Titres inscrits au Répertoire National (équivalences Bachelor & Master reconnues en UE).
+                                Nos formations principales délivrent des Titres inscrits au Répertoire National (équivalences Bachelor &amp; Master reconnues en UE).
                             </p>
                         </div>
                         <div className="border border-slate-700 p-8 rounded-3xl bg-slate-800/50">
                             <div className="text-2xl font-bold mb-4 text-amber-400">Partenariats Tech</div>
                             <p className="text-sm text-slate-400 leading-relaxed">
-                                Reconnus par l'écosystème : préparation aux certifications AWS, Microsoft, et outils standards de l'industrie (Figma, GitHub).
+                                Reconnus par l&apos;écosystème : préparation aux certifications AWS, Microsoft, et outils standards de l&apos;industrie (Figma, GitHub).
                             </p>
                         </div>
                     </div>
@@ -148,6 +148,8 @@ export default function AboutPage() {
                     <MessageCircle size={20} />
                 </Link>
             </section>
+
+            <Footer />
         </main>
     );
 }

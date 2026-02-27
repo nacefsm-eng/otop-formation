@@ -1,5 +1,13 @@
 import { Navbar } from "@/components/Navbar";
-import { Search, Filter, BookOpen, Clock, Users, Tags, ArrowRight, Award, Globe } from "lucide-react";
+import { Footer } from "@/components/Footer";
+import { Search, BookOpen, Clock, Users, ArrowRight, Award, Globe } from "lucide-react";
+import Image from "next/image";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Nos Formations Certifiantes | OTOP Formation",
+    description: "Explorez nos formations certifiantes en Digital, Management et Santé. Finançables CPF, OPCO ou entreprise. Insertion professionnelle garantie.",
+};
 
 const formations = [
     {
@@ -76,9 +84,9 @@ export default function FormationsPage() {
                         <div className="flex gap-4 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
                             <select className="px-5 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-medium whitespace-nowrap outline-none focus:ring-2 focus:ring-indigo-500 shrink-0">
                                 <option>Tous les domaines</option>
-                                <option>Digital & Tech</option>
+                                <option>Digital &amp; Tech</option>
                                 <option>Management</option>
-                                <option>Santé & Social</option>
+                                <option>Santé &amp; Social</option>
                             </select>
                             <select className="px-5 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-medium whitespace-nowrap outline-none focus:ring-2 focus:ring-indigo-500 shrink-0">
                                 <option>Niveau : Tous</option>
@@ -104,7 +112,7 @@ export default function FormationsPage() {
                             <div key={f.id} className="group bg-white dark:bg-slate-900 rounded-[32px] overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-2xl hover:shadow-indigo-500/10 transition-all hover:-translate-y-1 flex flex-col">
                                 <div className="aspect-[16/10] relative overflow-hidden">
                                     <div className="absolute inset-0 bg-slate-900/20 group-hover:bg-transparent transition-colors z-10" />
-                                    <img src={f.image} alt={f.title} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
+                                    <Image src={f.image} alt={f.title} fill className="object-cover group-hover:scale-110 transition-transform duration-500" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                                     <div className="absolute top-4 left-4 z-20 flex flex-col gap-2 items-start">
                                         <span className="px-3 py-1 bg-white/90 dark:bg-slate-900/90 text-[11px] font-black uppercase tracking-wider text-indigo-600 rounded-lg backdrop-blur-md">
                                             {f.category}
@@ -168,6 +176,8 @@ export default function FormationsPage() {
                     </div>
                 </div>
             </section>
+
+            <Footer />
         </main>
     );
 }

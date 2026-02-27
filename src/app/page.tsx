@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { Quiz } from "@/components/Quiz";
+import { Footer } from "@/components/Footer";
 import { ArrowRight, Star, Quote } from "lucide-react";
 import Link from "next/link";
 
@@ -17,8 +18,7 @@ export default function Home() {
             Ils recrutent nos apprenants
           </p>
           <div className="flex flex-wrap justify-center items-center gap-10 md:gap-20 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-            {/* Remplacer par de vrais logos */}
-            <div className="text-xl font-black">L'ORÉAL</div>
+            <div className="text-xl font-black">L&apos;ORÉAL</div>
             <div className="text-xl font-black">CAPGEMINI</div>
             <div className="text-xl font-black">SOCIÉTÉ GÉNÉRALE</div>
             <div className="text-xl font-black">THALES</div>
@@ -31,7 +31,7 @@ export default function Home() {
       <section className="py-24 bg-slate-50 dark:bg-slate-900/30">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">Nos domaines d'expertise</h2>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">Nos domaines d&apos;expertise</h2>
             <p className="text-slate-500 max-w-2xl mx-auto">
               Des formations conçues avec les experts du marché pour répondre aux besoins concrets des recruteurs internationaux.
             </p>
@@ -85,14 +85,14 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">Ils ont transformé leur carrière</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto">Découvrez les retours de nos anciens apprenants, aujourd'hui en poste dans de grandes entreprises.</p>
+            <p className="text-slate-500 max-w-2xl mx-auto">Découvrez les retours de nos anciens apprenants, aujourd&apos;hui en poste dans de grandes entreprises.</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
                 name: "Sarah M.", role: "Développeuse Frontend chez Capgemini",
-                text: " OTDP Formation m'a permis de me reconvertir en seulement 4 mois. Le coaching hebdomadaire a fait toute la différence lors de mes entretiens."
+                text: "OTOP Formation m'a permis de me reconvertir en seulement 4 mois. Le coaching hebdomadaire a fait toute la différence lors de mes entretiens."
               },
               {
                 name: "Alexandre D.", role: "Chef de projet Agile",
@@ -108,7 +108,7 @@ export default function Home() {
                 <div className="flex gap-1 mb-6 text-amber-400">
                   <Star fill="currentColor" size={18} /><Star fill="currentColor" size={18} /><Star fill="currentColor" size={18} /><Star fill="currentColor" size={18} /><Star fill="currentColor" size={18} />
                 </div>
-                <p className="text-slate-700 dark:text-slate-300 italic mb-8 relative z-10">"{t.text}"</p>
+                <p className="text-slate-700 dark:text-slate-300 italic mb-8 relative z-10">&quot;{t.text}&quot;</p>
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center font-bold text-indigo-600 dark:text-indigo-400">
                     {t.name.charAt(0)}
@@ -140,54 +140,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer Pro */}
-      <footer className="py-16 bg-slate-950 text-slate-400">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12 border-b border-slate-800 pb-12">
-            <div className="md:col-span-1">
-              <div className="text-2xl font-extrabold text-white mb-4">OTOP <span className="text-indigo-500">Formation</span></div>
-              <p className="text-sm leading-relaxed mb-6">
-                Propulsez votre carrière avec des formations certifiantes (Qualiopi), un suivi sur-mesure et une insertion professionnelle garantie.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-white font-bold mb-4 uppercase text-sm tracking-wider">Formations</h4>
-              <ul className="space-y-3 text-sm">
-                <li><Link href="/formations?f=tech" className="hover:text-indigo-400 transition-colors">Digital & Tech</Link></li>
-                <li><Link href="/formations?f=management" className="hover:text-indigo-400 transition-colors">Management & Leadership</Link></li>
-                <li><Link href="/formations?f=sante" className="hover:text-indigo-400 transition-colors">Santé & Social</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-bold mb-4 uppercase text-sm tracking-wider">Liens Utiles</h4>
-              <ul className="space-y-3 text-sm">
-                <li><Link href="/a-propos" className="hover:text-indigo-400 transition-colors">Qui sommes-nous ?</Link></li>
-                <li><Link href="/contact" className="hover:text-indigo-400 transition-colors">Contact & Support</Link></li>
-                <li><Link href="/espace-apprenant" className="hover:text-indigo-400 transition-colors">Login LMS</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-bold mb-4 uppercase text-sm tracking-wider">International</h4>
-              <ul className="space-y-3 text-sm">
-                <li><Link href="/contact" className="hover:text-indigo-400 transition-colors">Book a Call (EN)</Link></li>
-                <li><p className="text-slate-500">Global Certifications</p></li>
-                <li><p className="text-slate-500">Remote Learning Options</p></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row justify-between items-center text-xs">
-            <div className="mb-4 md:mb-0">
-              © {new Date().getFullYear()} OTOP Formation. Tous droits réservés.
-            </div>
-            <div className="flex gap-6">
-              <Link href="#" className="hover:text-white transition-colors">Politique de confidentialité (RGPD)</Link>
-              <Link href="#" className="hover:text-white transition-colors">Mentions Légales</Link>
-              <Link href="#" className="hover:text-white transition-colors">CGV</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }
