@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Globe, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "./ThemeToggle";
 
 const navLinks = [
     { name: "Formations", href: "/formations" },
@@ -68,6 +69,8 @@ export const Navbar = () => {
                         {lang}
                     </button>
 
+                    <ThemeToggle />
+
                     <div className="flex items-center gap-3">
                         <Link
                             href="/espace-apprenant"
@@ -121,6 +124,10 @@ export const Navbar = () => {
                                 <Globe size={20} />
                                 Langue : {lang}
                             </button>
+                            <div className="flex items-center gap-2">
+                                <span className="text-lg font-bold text-slate-700 dark:text-slate-200">Thème :</span>
+                                <ThemeToggle />
+                            </div>
                             <Link
                                 href="/espace-apprenant"
                                 className="text-lg font-bold text-slate-700 dark:text-slate-200"
