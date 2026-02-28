@@ -2,8 +2,12 @@
 
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { LogIn, Rocket, Download, MessageSquare, Lock, ShieldCheck, CheckCircle2, UserPlus, Sparkles, ArrowRight } from "lucide-react";
+import {
+    LogIn, Rocket, Download, MessageSquare, Lock, ShieldCheck,
+    CheckCircle2, UserPlus, Sparkles, ArrowRight, Eye, EyeOff
+} from "lucide-react";
 import { useState, FormEvent } from "react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function EspaceApprenant() {
@@ -12,15 +16,18 @@ export default function EspaceApprenant() {
     const [isLoading, setIsLoading] = useState(false);
     const [successMsg, setSuccessMsg] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         email: '',
+        password: '',
         loginEmail: '',
         loginPassword: ''
     });
 
+    // ─── REAL Registration ───
     const handleRegister = async (e: FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -28,25 +35,27 @@ export default function EspaceApprenant() {
         setSuccessMsg('');
 
         try {
-            const res = await fetch("/api/apprenants", {
+            const res = await fetch("/api/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     firstName: formData.firstName,
                     lastName: formData.lastName,
                     email: formData.email,
+                    password: formData.password,
                 }),
             });
 
-            if (res.status === 409) {
-                throw new Error("Un compte avec cet email existe déjà.");
-            }
+            const data = await res.json();
+
             if (!res.ok) {
-                throw new Error("Erreur de création de compte.");
+                throw new Error(data.error || "Erreur de création de compte.");
             }
 
-            setSuccessMsg("🎉 Compte créé avec succès ! Vos accès vous seront envoyés par email sous 24h.");
-            setFormData({ ...formData, firstName: '', lastName: '', email: '' });
+            setSuccessMsg("🎉 Compte créé avec succès ! Connectez-vous maintenant.");
+            setFormData({ ...formData, firstName: '', lastName: '', email: '', password: '' });
+            // Auto-switch to login after 2s
+            setTimeout(() => { setMode('login'); setSuccessMsg(''); }, 2500);
         } catch (err: any) {
             setErrorMsg(err.message || "Une erreur est survenue.");
         } finally {
@@ -54,21 +63,31 @@ export default function EspaceApprenant() {
         }
     };
 
-    const handleLogin = (e: FormEvent) => {
+    // ─── REAL Login with NextAuth ───
+    const handleLogin = async (e: FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setErrorMsg('');
 
-        // Simulate a brief loading for UX
-        setTimeout(() => {
-            const fakeUser = {
-                firstName: formData.loginEmail.split('@')[0] || "Demo",
-                lastName: "Apprenant",
-                email: formData.loginEmail || "demo@otop-formation.fr"
-            };
-            localStorage.setItem("otop_user", JSON.stringify(fakeUser));
+        try {
+            const result = await signIn("credentials", {
+                email: formData.loginEmail,
+                password: formData.loginPassword,
+                redirect: false,
+            });
+
+            if (result?.error) {
+                setErrorMsg(result.error);
+                setIsLoading(false);
+                return;
+            }
+
+            // Success — redirect to LMS
             router.push("/lms");
-        }, 800);
+        } catch (err) {
+            setErrorMsg("Erreur de connexion. Veuillez réessayer.");
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -77,7 +96,7 @@ export default function EspaceApprenant() {
 
             <div className="pt-28 pb-20 container mx-auto px-6">
                 <div className="max-w-6xl mx-auto">
-                    {/* Hero Heading with animation feel */}
+                    {/* Hero */}
                     <div className="text-center mb-10">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full text-sm font-bold mb-6">
                             <Sparkles size={16} />
@@ -94,16 +113,15 @@ export default function EspaceApprenant() {
                     <div className="bg-white dark:bg-slate-900 rounded-[40px] p-6 lg:p-12 border border-slate-200 dark:border-slate-800 shadow-2xl shadow-indigo-500/5 relative overflow-hidden">
                         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 relative z-10">
 
-                            {/* Left Column : Benefits — Ultra premium */}
+                            {/* Left Column: Benefits */}
                             <div className="space-y-8 lg:pr-8 lg:border-r border-slate-100 dark:border-slate-800">
                                 <div>
                                     <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-indigo-500/30">
                                         <Rocket size={28} />
                                     </div>
-                                    <h2 className="text-2xl font-bold mb-4">Ce qui vous attend</h2>
+                                    <h2 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Ce qui vous attend</h2>
                                     <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
                                         Notre plateforme centralise votre expérience d&apos;apprentissage.
-                                        Disponible en Français et en Anglais.
                                     </p>
                                 </div>
 
@@ -139,9 +157,9 @@ export default function EspaceApprenant() {
                                 </div>
                             </div>
 
-                            {/* Right Column : Forms */}
+                            {/* Right Column: Forms */}
                             <div className="flex flex-col justify-center max-w-sm mx-auto w-full">
-                                {/* Toggle Tabs — Premium style */}
+                                {/* Toggle Tabs */}
                                 <div className="flex bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl mb-6 relative z-20">
                                     <button
                                         onClick={() => { setMode('login'); setErrorMsg(''); setSuccessMsg(''); }}
@@ -167,7 +185,7 @@ export default function EspaceApprenant() {
                                     </div>
 
                                     {errorMsg && (
-                                        <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl text-sm font-bold border border-red-200 dark:border-red-900/50 text-center animate-pulse">
+                                        <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl text-sm font-bold border border-red-200 dark:border-red-900/50 text-center">
                                             {errorMsg}
                                         </div>
                                     )}
@@ -190,24 +208,32 @@ export default function EspaceApprenant() {
                                                     placeholder="votre@email.com"
                                                     value={formData.loginEmail}
                                                     onChange={(e) => setFormData({ ...formData, loginEmail: e.target.value })}
-                                                    className="w-full px-5 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-medium"
+                                                    className="w-full px-5 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-medium text-slate-900 dark:text-white"
                                                 />
                                             </div>
 
                                             <div className="space-y-1.5">
                                                 <div className="flex justify-between items-center ml-1">
                                                     <label htmlFor="login-password" className="block text-sm font-bold text-slate-700 dark:text-slate-300">Mot de passe</label>
-                                                    <button type="button" onClick={() => alert("Un email de réinitialisation vous a été envoyé si le compte existe.")} className="text-xs text-indigo-600 font-bold hover:underline">Oublié ?</button>
                                                 </div>
-                                                <input
-                                                    id="login-password"
-                                                    type="password"
-                                                    required
-                                                    placeholder="••••••••"
-                                                    value={formData.loginPassword}
-                                                    onChange={(e) => setFormData({ ...formData, loginPassword: e.target.value })}
-                                                    className="w-full px-5 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-medium"
-                                                />
+                                                <div className="relative">
+                                                    <input
+                                                        id="login-password"
+                                                        type={showPassword ? "text" : "password"}
+                                                        required
+                                                        placeholder="••••••••"
+                                                        value={formData.loginPassword}
+                                                        onChange={(e) => setFormData({ ...formData, loginPassword: e.target.value })}
+                                                        className="w-full px-5 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-medium text-slate-900 dark:text-white pr-12"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setShowPassword(!showPassword)}
+                                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                                    >
+                                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                                    </button>
+                                                </div>
                                             </div>
 
                                             <button
@@ -241,7 +267,7 @@ export default function EspaceApprenant() {
                                                         placeholder="Jean"
                                                         value={formData.firstName}
                                                         onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                                                        className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-medium"
+                                                        className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-medium text-slate-900 dark:text-white"
                                                     />
                                                 </div>
                                                 <div className="space-y-1.5">
@@ -253,7 +279,7 @@ export default function EspaceApprenant() {
                                                         placeholder="Dupont"
                                                         value={formData.lastName}
                                                         onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                                                        className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-medium"
+                                                        className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-medium text-slate-900 dark:text-white"
                                                     />
                                                 </div>
                                             </div>
@@ -267,8 +293,34 @@ export default function EspaceApprenant() {
                                                     placeholder="votre@email.com"
                                                     value={formData.email}
                                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                                    className="w-full px-5 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-medium"
+                                                    className="w-full px-5 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-medium text-slate-900 dark:text-white"
                                                 />
+                                            </div>
+
+                                            <div className="space-y-1.5">
+                                                <label htmlFor="register-password" className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Mot de passe</label>
+                                                <div className="relative">
+                                                    <input
+                                                        id="register-password"
+                                                        type={showPassword ? "text" : "password"}
+                                                        required
+                                                        minLength={8}
+                                                        placeholder="Min. 8 caractères"
+                                                        value={formData.password}
+                                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                                        className="w-full px-5 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-sm font-medium text-slate-900 dark:text-white pr-12"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setShowPassword(!showPassword)}
+                                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                                    >
+                                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                                    </button>
+                                                </div>
+                                                {formData.password && formData.password.length < 8 && (
+                                                    <p className="text-xs text-amber-600 ml-1 font-semibold">⚠️ Min. 8 caractères requis</p>
+                                                )}
                                             </div>
 
                                             <button
@@ -287,7 +339,7 @@ export default function EspaceApprenant() {
                                             </button>
 
                                             <p className="text-[11px] text-slate-400 text-center pt-2 flex items-center justify-center gap-1">
-                                                <Lock size={10} /> Vos données sont protégées · RGPD (UE)
+                                                <Lock size={10} /> Mot de passe chiffré (bcrypt) · RGPD (UE)
                                             </p>
                                         </form>
                                     )}

@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import {
     BookOpen, Award, PlayCircle, LogOut, LayoutDashboard,
     Calendar, Bell, CheckCircle2, Clock, Flame, Target,
     Star, FileText, MessageSquare, X, Download,
-    ChevronRight, BarChart2, Lock, Check
+    ChevronRight, BarChart2, Lock, Check, Menu
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -64,6 +65,7 @@ const EVENTS = [
 
 export default function LMSDashboard() {
     const router = useRouter();
+    const { data: session, status } = useSession();
     const [userName, setUserName] = useState("Apprenant");
     const [greeting, setGreeting] = useState("Bonjour");
     const [view, setView] = useState<View>("dashboard");
@@ -71,27 +73,36 @@ export default function LMSDashboard() {
     const [unreadMessages, setUnreadMessages] = useState(3);
     const [readMessages, setReadMessages] = useState<number[]>([]);
     const [playingCourse, setPlayingCourse] = useState(false);
+    const [mobileMenu, setMobileMenu] = useState(false);
 
     useEffect(() => {
-        const user = localStorage.getItem("otop_user");
-        if (!user) {
+        if (status === "unauthenticated") {
             router.push("/espace-apprenant");
-        } else {
-            try {
-                const parsed = JSON.parse(user);
-                if (parsed.firstName) setUserName(parsed.firstName);
-            } catch (e) { }
+        }
+        if (session?.user) {
+            const first = (session.user as any).firstName || session.user.name?.split(' ')[0] || "Apprenant";
+            setUserName(first);
         }
         const hour = new Date().getHours();
         if (hour < 12) setGreeting("Bonjour");
         else if (hour < 18) setGreeting("Bon après-midi");
         else setGreeting("Bonsoir");
-    }, [router]);
+    }, [router, session, status]);
 
     const handleLogout = () => {
-        localStorage.removeItem("otop_user");
-        router.push("/espace-apprenant");
+        signOut({ callbackUrl: "/espace-apprenant" });
     };
+
+    if (status === "loading") {
+        return (
+            <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 border-4 border-indigo-200 dark:border-indigo-900 border-t-indigo-600 rounded-full animate-spin" />
+                    <p className="text-sm font-bold text-slate-500 animate-pulse">Chargement du tableau de bord…</p>
+                </div>
+            </div>
+        );
+    }
 
     const markRead = (id: number) => {
         if (!readMessages.includes(id)) {
@@ -149,8 +160,8 @@ export default function LMSDashboard() {
                                 key={item.id}
                                 onClick={() => setView(item.id)}
                                 className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${view === item.id
-                                        ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600"
-                                        : "text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                                    ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600"
+                                    : "text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50"
                                     }`}
                             >
                                 <span className="flex items-center gap-3">{item.icon} {item.label}</span>
@@ -171,13 +182,52 @@ export default function LMSDashboard() {
                 </div>
             </aside>
 
+            {/* ─── Mobile Sidebar Overlay ─── */}
+            {mobileMenu && (
+                <div className="fixed inset-0 z-50 md:hidden">
+                    <div className="absolute inset-0 bg-black/50" onClick={() => setMobileMenu(false)} />
+                    <aside className="absolute left-0 top-0 bottom-0 w-72 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col animate-in slide-in-from-left">
+                        <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                            <Link href="/" className="font-extrabold text-2xl tracking-tighter flex items-center gap-1">
+                                OTOP<span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">.LMS</span>
+                            </Link>
+                            <button onClick={() => setMobileMenu(false)} className="text-slate-400 hover:text-slate-600"><X size={20} /></button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto py-4">
+                            <nav className="space-y-1 px-3">
+                                {navItems.map((item) => (
+                                    <button key={item.id} onClick={() => { setView(item.id); setMobileMenu(false); }}
+                                        className={`w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${view === item.id ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600" : "text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50"}`}>
+                                        <span className="flex items-center gap-3">{item.icon} {item.label}</span>
+                                        {item.id === "messages" && unreadMessages > 0 && (
+                                            <span className="w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">{unreadMessages}</span>
+                                        )}
+                                    </button>
+                                ))}
+                            </nav>
+                        </div>
+                        <div className="p-4 border-t border-slate-100 dark:border-slate-800">
+                            <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 w-full text-slate-500 hover:text-red-600 font-medium transition-colors rounded-xl hover:bg-red-50 dark:hover:bg-red-900/10 text-sm">
+                                <LogOut size={20} /> Déconnexion
+                            </button>
+                        </div>
+                    </aside>
+                </div>
+            )}
+
             {/* ─── Main ─── */}
             <main className="flex-1 flex flex-col h-screen overflow-hidden">
                 {/* Topbar */}
-                <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 shrink-0">
-                    <div>
-                        <h1 className="text-xl font-bold text-slate-900 dark:text-white">{greeting}, {userName} 👋</h1>
-                        <p className="text-xs text-slate-500">Continue ton parcours, tu es sur la bonne voie !</p>
+                <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 md:px-8 shrink-0">
+                    <div className="flex items-center gap-3">
+                        {/* Mobile hamburger */}
+                        <button onClick={() => setMobileMenu(true)} className="md:hidden w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
+                            <Menu size={20} />
+                        </button>
+                        <div>
+                            <h1 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">{greeting}, {userName} 👋</h1>
+                            <p className="text-xs text-slate-500 hidden sm:block">Continue ton parcours, tu es sur la bonne voie !</p>
+                        </div>
                     </div>
                     <div className="flex items-center gap-3">
                         <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 dark:bg-orange-900/20 text-orange-600 rounded-lg border border-orange-100 dark:border-orange-900/30">

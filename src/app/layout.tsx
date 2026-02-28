@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { WhatsAppWidget } from "@/components/WhatsAppWidget";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import AuthProvider from "@/components/AuthProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,11 +31,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
-          <WhatsAppWidget />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            {children}
+            <WhatsAppWidget />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
 }
+
