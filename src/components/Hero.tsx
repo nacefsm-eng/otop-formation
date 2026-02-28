@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 export const Hero = () => {
     return (
@@ -23,7 +24,7 @@ export const Hero = () => {
                         className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 text-sm font-semibold mb-6"
                     >
                         <Sparkles size={16} />
-                        L'excellence en formation à portée de clic
+                        L&apos;excellence en formation à portée de clic
                     </motion.div>
 
                     <motion.h1
@@ -52,15 +53,21 @@ export const Hero = () => {
                         transition={{ duration: 0.5, delay: 0.3 }}
                         className="flex flex-col sm:flex-row items-center justify-center gap-4"
                     >
-                        <button className="group relative px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold flex items-center gap-2 shadow-xl shadow-indigo-500/30 hover:scale-105 transition-all overflow-hidden">
+                        <Link
+                            href="/formations"
+                            className="group relative px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold flex items-center gap-2 shadow-xl shadow-indigo-500/30 hover:scale-105 transition-all overflow-hidden"
+                        >
                             <span className="relative z-10">Découvrir nos formations</span>
                             <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform relative z-10" />
                             <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </button>
-                        <button className="px-8 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-2xl font-bold flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                        </Link>
+                        <Link
+                            href="/parcours"
+                            className="px-8 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-2xl font-bold flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+                        >
                             <Play size={20} fill="currentColor" />
-                            Voir la présentation
-                        </button>
+                            Notre parcours
+                        </Link>
                     </motion.div>
                 </div>
 
@@ -73,7 +80,7 @@ export const Hero = () => {
                 >
                     <div className="text-center">
                         <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">98%</div>
-                        <div className="text-sm text-slate-500 dark:text-slate-500">Insertion Pro</div>
+                        <div className="text-sm text-slate-500 dark:text-slate-500">Taux de satisfaction</div>
                     </div>
                     <div className="text-center">
                         <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">50+</div>
@@ -81,7 +88,7 @@ export const Hero = () => {
                     </div>
                     <div className="text-center">
                         <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">2000+</div>
-                        <div className="text-sm text-slate-500 dark:text-slate-500">Apprenants</div>
+                        <div className="text-sm text-slate-500 dark:text-slate-500">Apprenants formés</div>
                     </div>
                     <div className="text-center">
                         <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">4.9/5</div>

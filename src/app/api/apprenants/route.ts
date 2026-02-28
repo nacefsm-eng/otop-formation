@@ -1,14 +1,22 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
+import { apprenantSchema } from "@/lib/validations";
 
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { email, firstName, lastName } = body;
 
-        if (!email || !firstName || !lastName) {
-            return new NextResponse("Missing fields", { status: 400 });
+        // ✅ Validate input with Zod
+        const result = apprenantSchema.safeParse(body);
+        if (!result.success) {
+            const errors = result.error.flatten().fieldErrors;
+            return NextResponse.json(
+                { error: "Données invalides", details: errors },
+                { status: 400 }
+            );
         }
+
+        const { email, firstName, lastName } = result.data;
 
         // Check if user already exists
         const existing = await db.apprenant.findUnique({
@@ -16,7 +24,10 @@ export async function POST(req: Request) {
         });
 
         if (existing) {
-            return new NextResponse("Un compte avec cet email existe déjà.", { status: 409 });
+            return NextResponse.json(
+                { error: "Un compte avec cet email existe déjà." },
+                { status: 409 }
+            );
         }
 
         const apprenant = await db.apprenant.create({
@@ -28,9 +39,16 @@ export async function POST(req: Request) {
             },
         });
 
-        return NextResponse.json(apprenant);
+        return NextResponse.json({
+            success: true,
+            id: apprenant.id,
+            message: "Compte créé avec succès",
+        });
     } catch (error) {
         console.error("[APPRENANTS_POST]", error);
-        return new NextResponse("Internal Error", { status: 500 });
+        return NextResponse.json(
+            { error: "Erreur interne du serveur" },
+            { status: 500 }
+        );
     }
 }

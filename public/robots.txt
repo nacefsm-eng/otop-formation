@@ -1,0 +1,9 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+Disallow: /api/
+Disallow: /lms/
+Disallow: /espace-apprenant/
+
+Sitemap: https://otop-formation.vercel.app/sitemap.xml

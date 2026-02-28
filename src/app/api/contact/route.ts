@@ -1,28 +1,40 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/db';
+import { NextResponse } from "next/server";
+import db from "@/lib/db";
+import { contactSchema } from "@/lib/validations";
 
 export async function POST(req: Request) {
     try {
-        const data = await req.json();
+        const body = await req.json();
 
-        const contactInfo = {
-            subject: data.subject,
-            name: data.name,
-            email: data.email,
-            phone: data.phone || null,
-            message: data.message,
-            sourceUrl: data.sourceUrl || null
-        };
+        // ✅ Validate input with Zod
+        const result = contactSchema.safeParse(body);
+        if (!result.success) {
+            const errors = result.error.flatten().fieldErrors;
+            return NextResponse.json(
+                { error: "Données invalides", details: errors },
+                { status: 400 }
+            );
+        }
 
-        const request = await prisma.contactRequest.create({
-            data: contactInfo
+        const { subject, name, email, phone, message, sourceUrl } = result.data;
+
+        const request = await db.contactRequest.create({
+            data: {
+                subject,
+                name,
+                email,
+                phone: phone || null,
+                message,
+                sourceUrl: sourceUrl || null,
+            },
         });
-
-        // Optionnel : Envoyer un e-mail à l'admin ici via Resend, Sendgrid ou Nodemailer
 
         return NextResponse.json({ success: true, id: request.id }, { status: 201 });
     } catch (error) {
         console.error("Contact form error:", error);
-        return NextResponse.json({ error: 'Failed to submit contact request' }, { status: 500 });
+        return NextResponse.json(
+            { error: "Erreur interne du serveur" },
+            { status: 500 }
+        );
     }
 }

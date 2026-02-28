@@ -1,5 +1,5 @@
 {
-  "name": "temp-app",
+  "name": "otop-formation",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -19,7 +19,8 @@
     "prisma": "^5.22.0",
     "react": "^18",
     "react-dom": "^18",
-    "tailwind-merge": "^3.5.0"
+    "tailwind-merge": "^3.5.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/node": "^20",
